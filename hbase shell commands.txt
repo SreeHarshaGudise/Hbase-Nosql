@@ -1,0 +1,152 @@
+Shell command for HBase No Sql database:
+
+start all hadoop services - start-all.sh
+start hbase service - start-hbase.sh
+open hbase shell- hbase shell
+
+list- to list the tables in database
+hbase > list
+
+status- to show details about the servers in system
+hbase>status
+
+version - to show the version of hbase we are using
+hbase>version
+
+whoami- this command show the authority of user using hbase
+hbase>whoami
+
+create table in hbase database
+
+hbase>create 'table-name','column-family1','column-family2'
+
+this created the table having column families 
+
+ Drop table in hbase
+to drop a table we need to disable the table and then we have to drop
+
+hbase>disable 'table-name'
+
+hbase> drop 'table-name'
+
+Disableall command 
+this command used to disable all tables whose name starting with some name
+hbase>disable_all 'table starts with.*'
+this disables all table whose name starts with particular order
+
+DropAll command
+this command used to drop all disabled tables whose name starting with particular sequence
+hbase>drop_all 'table starts with.*'
+
+IsDisabled Command
+this command used to check with the table whether it is a disabled one or not
+hbase>isDisabled 'table-name'
+it shows true or false
+
+enable command
+this command used to enale the disabled  tables in database
+hbase>enable 'table-name'
+
+enable_all command
+this command used to enable all disabled tables in hbase
+hbase>enable_all 'tablenameseq.*'
+
+Scan command
+this command used to show rows from the table
+hbase>scan 'table-name'
+
+describe command
+this command used to describe the table contents
+hbase>describe 'table-name'
+
+DML commands 
+
+to enter the values in columns in hbase table we have PUT command
+
+put command
+hbase> put 'table-name','row-id','columnfamily:column','column-value'
+here row id is individual record and column family has been intitated with columns here and given value for them
+
+get command
+ this command used to get values from particular row id and column values
+
+hbase>get 'table-name','row-id','columnfamily:column'
+this gets the data from the table of particular id
+
+alter command
+this command used to delete a columnfamily or add a column family or change the versions of columnfamily and all others
+hbase> alter 'table-name','delete'=>'columnfamily'
+this deletes the columnfamily from table
+
+hbase>alter 'table-name','columnfamily'
+this commands helps us to add columnfamily to table
+
+hbase>alter 'table-name',NAME => 'columnfamily',VERSIONS => 5
+this alters the table having columnfamily versions to 5 as it contains default value as 1
+
+Delete command
+hbase> delete 'table-name','1','columnfamily:column'
+this deletes the columnfamily column values from  particular row id
+
+truncate command
+hbase>truncate ' table-name'
+this truncates the whole values from table 
+
+deleteall command
+hbase>deleteall 'table-name','row-id'
+this deletes all info from row -id
+
+exists command
+hbase>exists 'table-name'
+this command describes whether the table exists or not
+
+
+
+HBASE INTEGRATION WITH HIVE
+
+here there are drawbacks in hbase as well as hive 
+  hbase 
+=> HBASE can easily do CURD operations
+=>Hbase has the concept of versions
+=>Here aggregation doesnt perform
+=>Joins are not perfomred here
+
+
+hive
+=>it doesnt support CURD operations
+=>hive doesnt have concept of versions
+=>Aggregation works over here
+=>joins can be performed easily
+
+
+how this integrations works in hive
+
+first thing we need to add jar files of hbase into hive lib folder by using command
+
+hive shell:
+
+add jar /usr/local/hbase/hbase-0.98.9.jar;
+add jar /usr/local/hbase/protobuf-java-2.5.0.jar;
+add jar /usr/local/hbase/zookeeper-3.4.6.jar;
+add jar /usr/local/hbase/hbase-it-0.98.9-hadoop2-tests.jar;
+add jar /usr/local/hbase/guava-12.1.5.jar;
+
+check the lis of jars in hive whether the jar files are added on it
+ hive >list jars;
+
+hive>set  hbase.zookeeper,quorum = localhost;
+
+Then create external table for hive which cionnects with hbase
+
+create external table tablename(eno int,ename string,esal string,address string) stored by 'org.apache.hadoop.hive.hbase.HBaseStorageHandler'
+with SERDEPROPERTIES ("hbase.columns.mapping" = ":key,emp:ename,emp:sal,emp:address") TBLPROPERTIES ("hbase.table.name" = "EMPLOYEE");
+
+
+this creates a link in hive table with hbase table
+
+insert overwrite table tablename select eid,ename,esal,address from emp;
+
+this loads the data from hive to hbase directly and updated 
+
+Best thing to work out with hive and hbase!!!!
+
